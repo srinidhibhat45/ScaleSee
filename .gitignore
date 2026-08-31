@@ -1,0 +1,5 @@
+.DS_Store
+node_modules/
+# scratch pages the review scripts write next to the app
+_review.html
+_lab.html

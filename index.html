@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ScaleSee — how big is big, actually?</title>
+<meta name="description" content="Pick two quantities. See them side by side, to scale. Money, land, height, distance, weight, time, and more.">
+<meta name="color-scheme" content="light dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter+Tight:wght@400;450;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<a class="skip" href="#stagewrap">skip to the picture</a>
+<div class="wrap">
+
+  <header class="head">
+    <h1 class="logo">
+      <svg class="mark" width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" aria-hidden="true">
+        <path d="m8.6 2.9 7.3 4.2v8.4l-7.3 4.2-7.3-4.2V7.1Z"/>
+        <path d="m8.6 11.3 7.3-4.2M8.6 11.3v8.4M8.6 11.3 1.3 7.1"/>
+        <path d="m19.6 15.1 2.8 1.6v3.2l-2.8 1.6-2.8-1.6v-3.2Z"/>
+      </svg>
+      Scale<span>See</span>
+    </h1>
+    <div class="headtools">
+      <p class="tagline">how big is big, actually</p>
+      <div class="themer" role="group" aria-label="colour theme" id="themer">
+        <button type="button" class="iconbtn" data-theme-set="auto" aria-pressed="true">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8.2"/><path d="M12 3.8v16.4" /><path d="M12 20.2a8.2 8.2 0 0 0 0-16.4" fill="currentColor" stroke="none"/></svg>
+          <span class="sr-only">match my system theme</span>
+        </button>
+        <button type="button" class="iconbtn" data-theme-set="light" aria-pressed="false">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.4"/><path d="M12 1.8v2.6M12 19.6v2.6M4.8 4.8l1.9 1.9M17.3 17.3l1.9 1.9M1.8 12h2.6M19.6 12h2.6M4.8 19.2l1.9-1.9M17.3 6.7l1.9-1.9"/></svg>
+          <span class="sr-only">light theme</span>
+        </button>
+        <button type="button" class="iconbtn" data-theme-set="dark" aria-pressed="false">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 14.4A8.9 8.9 0 0 1 9.6 3.5a8.9 8.9 0 1 0 10.9 10.9Z"/></svg>
+          <span class="sr-only">dark theme</span>
+        </button>
+      </div>
+      <button type="button" class="iconbtn wide" id="help" aria-haspopup="dialog">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><rect x="2.2" y="5.4" width="19.6" height="13.2" rx="2.4"/><path d="M6.4 9.6h.01M10 9.6h.01M13.6 9.6h.01M17.2 9.6h.01M6.4 13h.01M17.2 13h.01M9.4 14.6h5.2"/></svg>
+        <span class="sr-only">keyboard shortcuts</span>
+      </button>
+    </div>
+  </header>
+
+<main>
+  <nav class="cats" id="cats" aria-label="what to compare"></nav>
+
+  <section class="picker card" aria-label="the two quantities">
+    <div class="side">
+      <label class="tag tag-a" for="vA">this<span class="sr-only"> — the first amount</span></label>
+      <div class="row">
+        <input id="vA" class="num" type="text" inputmode="decimal" autocomplete="off" spellcheck="false">
+        <select id="uA" class="sel" aria-label="unit for the first amount"></select>
+        <select id="cA" class="sel cur" aria-label="currency for the first amount"></select>
+      </div>
+    </div>
+    <div class="vs">
+      <span class="vs-word" aria-hidden="true">vs</span>
+      <button type="button" id="swap" class="swap" aria-label="swap the two sides">⇄</button>
+    </div>
+    <div class="side">
+      <label class="tag tag-b" for="vB">that<span class="sr-only"> — the second amount</span></label>
+      <div class="row">
+        <input id="vB" class="num" type="text" inputmode="decimal" autocomplete="off" spellcheck="false">
+        <select id="uB" class="sel" aria-label="unit for the second amount"></select>
+        <select id="cB" class="sel cur" aria-label="currency for the second amount"></select>
+      </div>
+    </div>
+  </section>
+
+  <div class="tryrow">
+    <span class="trylabel" id="trylabel">try</span>
+    <div class="chips presets" id="presets" role="group" aria-labelledby="trylabel"></div>
+  </div>
+
+  <section class="verdict" role="status">
+    <p class="verdict-line" id="verdict"></p>
+    <p class="verdict-sub" id="verdictSub"></p>
+  </section>
+
+  <section class="stagewrap card" id="stagewrap" aria-label="the picture">
+    <div class="stagebar">
+      <div class="legend">
+        <span class="key key-a"><i aria-hidden="true"></i><b id="legA"></b></span>
+        <span class="key key-b"><i aria-hidden="true"></i><b id="legB"></b></span>
+      </div>
+      <div class="modes" id="modes" role="group" aria-label="how to scale the picture">
+        <button type="button" data-mode="true" class="mode" aria-pressed="true">true scale</button>
+        <button type="button" data-mode="log" class="mode" aria-pressed="false">log scale</button>
+      </div>
+    </div>
+    <div class="stage" id="stage" role="img" tabindex="0"></div>
+    <p class="stagenote" id="stageNote"></p>
+  </section>
+
+  <section class="factwrap" aria-labelledby="factsH">
+    <h2 class="h2" id="factsH">put another way</h2>
+    <div class="card factcard">
+      <table class="facts" id="facts"></table>
+    </div>
+  </section>
+
+  <section class="card refs" aria-labelledby="refsH">
+    <h2 class="h2" id="refsH">reference points</h2>
+    <p class="hint">pick one and it loads on the right — whatever was there slides to the left, so you can walk up the scale</p>
+    <div class="reflist" id="refs"></div>
+  </section>
+</main>
+
+  <footer class="foot">
+    <button type="button" id="shuffle" class="btn">surprise me</button>
+    <button type="button" id="save" class="btn ghost">save the picture</button>
+    <button type="button" id="copy" class="btn ghost">copy this comparison</button>
+    <p class="fine">Made for squinting at numbers until they mean something. Landmark figures are rounded real-world values; currency rates are rough and hardcoded. Press <kbd>?</kbd> for keyboard shortcuts.</p>
+  </footer>
+
+</div>
+
+<dialog id="sheet" class="sheet" aria-labelledby="sheetH">
+  <div class="sheet-head">
+    <h2 class="h2" id="sheetH">keyboard</h2>
+    <button type="button" class="iconbtn" id="sheetClose" aria-label="close">
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M5.5 5.5l13 13M18.5 5.5l-13 13"/></svg>
+    </button>
+  </div>
+  <dl class="keys">
+    <div><dt><kbd>S</kbd></dt><dd>swap the two sides</dd></div>
+    <div><dt><kbd>R</kbd></dt><dd>surprise me</dd></div>
+    <div><dt><kbd>T</kbd></dt><dd>true scale / log scale</dd></div>
+    <div><dt><kbd>D</kbd></dt><dd>light / dark</dd></div>
+    <div><dt><kbd>C</kbd></dt><dd>copy the link</dd></div>
+    <div><dt><kbd>P</kbd></dt><dd>save the picture</dd></div>
+    <div><dt><kbd>[</kbd> <kbd>]</kbd></dt><dd>previous / next category</dd></div>
+    <div><dt><kbd>↑</kbd> <kbd>↓</kbd></dt><dd>in a number box, ×10 / ÷10</dd></div>
+    <div><dt><kbd>?</kbd></dt><dd>this list</dd></div>
+    <div><dt><kbd>Esc</kbd></dt><dd>close</dd></div>
+  </dl>
+</dialog>
+
+<span class="sr-only" id="liveMsg" role="status"></span>
+
+<script src="js/util.js"></script>
+<script src="js/data.js"></script>
+<script src="js/icons.js"></script>
+<script src="js/art.js"></script>
+<script src="js/renderers.js"></script>
+<script src="js/facts.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
