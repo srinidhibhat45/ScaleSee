@@ -8,9 +8,10 @@ const read = p => fs.readFileSync(path.join(root, p), 'utf8');
 const html = read('index.html');
 const css = read('css/styles.css');
 const js = ['util', 'data', 'icons', 'art', 'renderers', 'facts', 'app'].map(f => read('js/' + f + '.js')).join('\n\n');
-const fonts = '<link rel="preconnect" href="https://fonts.googleapis.com">\n'
+const fonts = '<meta name="color-scheme" content="light dark">\n'
+  + '<link rel="preconnect" href="https://fonts.googleapis.com">\n'
   + '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n'
-  + '<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter+Tight:wght@400;450;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">';
+  + '<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:opsz,wght@144,600&family=Inter+Tight:wght@400;450;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">';
 const title = 'ScaleSee';
 
 let body = html.split('<body>')[1].split('</body>')[0].replace(/[ \t]*<script src="[^"]*"><\/script>\n?/g, '');

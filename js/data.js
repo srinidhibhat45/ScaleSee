@@ -15,7 +15,7 @@ const CATS = [
   id: 'money', name: 'Money', emoji: '💰', renderer: 'money', currency: true,
   blurb: 'a million is a rounding error',
   units: [
-    { id: 'one', name: 'just the number', short: '' },
+    { id: 'one', name: 'just the number', short: '', f: 1 },
     { id: 'k', name: 'thousand', short: 'thousand', f: 1e3 },
     { id: 'lakh', name: 'lakh', short: 'lakh', f: 1e5 },
     { id: 'mn', name: 'million', short: 'million', f: 1e6 },

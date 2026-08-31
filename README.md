@@ -52,6 +52,16 @@ drawings repaint too, because their palette lives in JS rather than CSS.
 Every comparison is a URL, so `copy this comparison` gives you a link straight back to
 it, and `save the picture` writes the current drawing out as a 2000×1120 PNG.
 
+## On a phone
+
+The drawing is the point, so on a narrow screen it goes edge to edge — out past the
+card, past the page padding — and pans sideways inside its own scroller, with a fade
+on the right edge and a line under it saying so. Everything else reflows rather than
+shrinks: the header drops its tagline to a second row, the value/unit/currency row
+stays on one line, and the comparison table tightens instead of scrolling, so the
+numbers are still readable side by side. Anything you touch is at least 40px under a
+coarse pointer, and the keyboard hint gets out of the way.
+
 ## Keyboard
 
 | | |
@@ -114,15 +124,19 @@ needs, `ART.box` and `ART.prism` build solids out of them, and a single shared
 sky, ground, and a floor grid that bunches toward the horizon; distant landmarks get
 pushed toward the backdrop with `ART.haze` so they read as far away.
 
-The chrome is hairlines and type, no serifs anywhere: `Space Grotesk` for the verdict
-and the wordmark, `Inter Tight` for the interface, `DM Mono` for anything numeric —
+The chrome is hairlines and type: `Space Grotesk` for the verdict, `Inter Tight` for the interface, `DM Mono` for anything numeric —
 and the mono does real work, not decoration. Every measured value on the page is set
 in it, so numbers line up in columns and you can compare them by eye.
 
-The two comparison colours are a deep raspberry and a petrol blue: a warm/cool split
-rather than two neighbours, so they stay apart for colour-vision deficiency as well as
-for everyone else. They live in CSS (`--a`, `--b`) and the drawings read them back at
-render time, which is how they can differ between light and dark.
+The wordmark is the one place a serif is allowed: `Fraunces`, set as a single word,
+next to a mark that is just the product — a big circle and a small one sharing a
+baseline, drawn in the two comparison colours.
+
+Those colours are a violet and a forest green: not neighbours, and not a warm/cool
+pair you have seen on every other site. Violet keeps a strong blue channel where the
+green has none, so the two stay apart under colour-vision deficiency too. They live in
+CSS (`--a`, `--b`) and the drawings read them back at render time, which is how they
+can differ between light and dark.
 
 Both themes are one drawing in two palettes. `THEMES` at the top of `js/art.js` holds
 every colour the pictures use that is not one of the two comparison colours — sky,

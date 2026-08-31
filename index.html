@@ -6,9 +6,10 @@
 <title>ScaleSee — how big is big, actually?</title>
 <meta name="description" content="Pick two quantities. See them side by side, to scale. Money, land, height, distance, weight, time, and more.">
 <meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='14.6' cy='12.4' r='8.4' fill='%232c7a4e'/%3E%3Ccircle cx='4.1' cy='18.4' r='2.4' fill='%238b3fa8'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter+Tight:wght@400;450;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:opsz,wght@144,600&family=Inter+Tight:wght@400;450;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -17,15 +18,15 @@
 
   <header class="head">
     <h1 class="logo">
-      <svg class="mark" width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" aria-hidden="true">
-        <path d="m8.6 2.9 7.3 4.2v8.4l-7.3 4.2-7.3-4.2V7.1Z"/>
-        <path d="m8.6 11.3 7.3-4.2M8.6 11.3v8.4M8.6 11.3 1.3 7.1"/>
-        <path d="m19.6 15.1 2.8 1.6v3.2l-2.8 1.6-2.8-1.6v-3.2Z"/>
+      <svg class="mark" width="30" height="30" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="14.6" cy="12.4" r="8.4" fill="var(--b)"/>
+        <circle cx="4.1" cy="18.4" r="2.4" fill="var(--a)"/>
+        <path d="M.9 21.7h22.2" stroke="currentColor" stroke-opacity=".28" stroke-width="1.1" stroke-linecap="round"/>
       </svg>
-      Scale<span>See</span>
+      <span class="word">Scale<em>See</em></span>
     </h1>
+    <p class="tagline">how big is big, actually</p>
     <div class="headtools">
-      <p class="tagline">how big is big, actually</p>
       <div class="themer" role="group" aria-label="colour theme" id="themer">
         <button type="button" class="iconbtn" data-theme-set="auto" aria-pressed="true">
           <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8.2"/><path d="M12 3.8v16.4" /><path d="M12 20.2a8.2 8.2 0 0 0 0-16.4" fill="currentColor" stroke="none"/></svg>
@@ -94,7 +95,7 @@
         <button type="button" data-mode="log" class="mode" aria-pressed="false">log scale</button>
       </div>
     </div>
-    <div class="stage" id="stage" role="img" tabindex="0"></div>
+    <div class="stagepan"><div class="stage" id="stage" role="img" tabindex="0"></div></div>
     <p class="stagenote" id="stageNote"></p>
   </section>
 
@@ -116,7 +117,7 @@
     <button type="button" id="shuffle" class="btn">surprise me</button>
     <button type="button" id="save" class="btn ghost">save the picture</button>
     <button type="button" id="copy" class="btn ghost">copy this comparison</button>
-    <p class="fine">Made for squinting at numbers until they mean something. Landmark figures are rounded real-world values; currency rates are rough and hardcoded. Press <kbd>?</kbd> for keyboard shortcuts.</p>
+    <p class="fine">Made for squinting at numbers until they mean something. Landmark figures are rounded real-world values; currency rates are rough and hardcoded.<span class="kbdhint"> Press <kbd>?</kbd> for keyboard shortcuts.</span></p>
   </footer>
 
 </div>

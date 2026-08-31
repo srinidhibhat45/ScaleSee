@@ -6,7 +6,7 @@ function readAccent(name, fallback) {
     return /^#[0-9a-f]{3,8}$/i.test(v) ? v : fallback;
   } catch (e) { return fallback; }
 }
-let COL_A = '#b0356e', COL_B = '#1a6f86';
+let COL_A = '#8b3fa8', COL_B = '#2c7a4e';
 const $ = id => document.getElementById(id);
 const S = { cat: 'money', mode: 'true', a: { v: 1, u: 'mn', c: 'USD' }, b: { v: 1, u: 'bn', c: 'USD' } };
 
