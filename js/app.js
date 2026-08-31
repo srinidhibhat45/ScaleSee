@@ -55,9 +55,40 @@ function bestUnit(cat, base) {
 }
 
 /* ---------------- chrome ---------------- */
+/* A strip that scrolls sideways has to say so. Fade whichever edge still has
+   something behind it — never both when there is nothing to scroll to. */
+let fitCats = null, fitPresets = null;
+function markEdges(el) {
+  const upd = () => {
+    const max = el.scrollWidth - el.clientWidth;
+    el.classList.toggle('has-l', max > 2 && el.scrollLeft > 2);
+    el.classList.toggle('has-r', max > 2 && el.scrollLeft < max - 2);
+  };
+  el.addEventListener('scroll', upd, { passive: true });
+  window.addEventListener('resize', upd);
+  upd();
+  return upd;
+}
+/* on a phone the category strip is three times wider than the screen, so the
+   chosen one has to be brought into view or it is simply lost */
+function catInView() {
+  const b = document.querySelector('.cat[aria-pressed="true"]'), c = $('cats');
+  if (!b || !c) return true;
+  const r = b.getBoundingClientRect(), s = c.getBoundingClientRect();
+  return r.left >= s.left - 1 && r.right <= s.right + 1;
+}
+function showCat(smooth) {
+  const b = document.querySelector('.cat[aria-pressed="true"]');
+  if (!b || !b.scrollIntoView) return;
+  let slide = smooth;
+  try { slide = smooth && !window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+  catch (e) { /* no matchMedia, no problem */ }
+  b.scrollIntoView({ block: 'nearest', inline: 'center', behavior: slide ? 'smooth' : 'auto' });
+}
 function buildCats() {
   $('cats').innerHTML = CATS.map(c =>
     `<button type="button" class="cat" data-cat="${c.id}" aria-pressed="${c.id === S.cat}">${icon(c.id)}${c.name}</button>`).join('');
+  if (fitCats) fitCats();
 }
 function buildUnits() {
   const cat = catOf();
@@ -74,6 +105,9 @@ function buildUnits() {
 function buildPresets() {
   $('presets').innerHTML = catOf().presets.map((p, i) =>
     `<button type="button" class="chip" data-preset="${i}">${U.esc(p.t)}</button>`).join('');
+  const el = $('presets');
+  el.scrollLeft = 0;
+  if (fitPresets) fitPresets();
 }
 /* how a landmark reads on its own terms: 828 m, not 267.1 storeys */
 function refReading(cat, r) {
@@ -216,6 +250,7 @@ function setCat(id) {
   S.a = Object.assign({ c: 'USD' }, cat.def.a);
   S.b = Object.assign({ c: 'USD' }, cat.def.b);
   buildUnits(); buildPresets(); buildRefs(); syncInputs(); render();
+  showCat(true);
 }
 function applyPreset(p) {
   S.a = { v: p.a[0], u: p.a[1], c: p.a[2] || 'USD' };
@@ -376,7 +411,25 @@ function bindKeys() {
 function init() {
   if (!readHash()) { const c = CATS[0]; S.a = Object.assign({ c: 'USD' }, c.def.a); S.b = Object.assign({ c: 'USD' }, c.def.b); }
   initTheme();
+  fitCats = markEdges($('cats'));
+  fitPresets = markEdges($('presets'));
   buildCats(); buildUnits(); buildPresets(); buildRefs(); syncInputs(); render();
+  showCat(false);
+  /* Two things move the strip out from under us after this runs: the webfont
+     landing widens every chip, and the browser restores the strip's own scroll
+     offset from the last visit — which points at whatever used to be there,
+     not at the category in the link. So the position is checked again once
+     things have settled, and only corrected if the choice is off the screen. */
+  const settle = () => {
+    if (fitCats) fitCats();
+    if (fitPresets) fitPresets();
+    if (!catInView()) showCat(false);
+  };
+  try { document.fonts.ready.then(settle); } catch (e) { /* no font loading API */ }
+  window.addEventListener('load', () => {
+    requestAnimationFrame(settle);
+    setTimeout(settle, 180);
+  });
   bindKeys();
 
   $('themer').addEventListener('click', e => {
@@ -417,6 +470,7 @@ function init() {
     const c = CATS[Math.floor(Math.random() * CATS.length)];
     S.cat = c.id; buildUnits(); buildPresets(); buildRefs();
     applyPreset(c.presets[Math.floor(Math.random() * c.presets.length)]);
+    showCat(true);
     document.querySelector('.stagewrap').scrollIntoView({ behavior: 'smooth', block: 'center' });
   });
   $('copy').addEventListener('click', async () => {
@@ -424,6 +478,6 @@ function init() {
     catch (e) { $('copy').textContent = location.hash; say('could not reach the clipboard'); }
     setTimeout(() => { $('copy').textContent = 'copy this comparison'; }, 1600);
   });
-  window.addEventListener('hashchange', () => { if (readHash()) { buildCats(); buildUnits(); buildPresets(); buildRefs(); syncInputs(); render(); } });
+  window.addEventListener('hashchange', () => { if (readHash()) { buildCats(); buildUnits(); buildPresets(); buildRefs(); syncInputs(); render(); showCat(true); } });
 }
 document.addEventListener('DOMContentLoaded', init);

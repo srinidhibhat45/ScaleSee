@@ -163,12 +163,23 @@ body{
 .hint{margin:-8px 0 14px;color:var(--muted);font-size:13.5px}
 
 /* ---------- category nav ---------- */
+.catsrow{border-bottom:1px solid var(--line);margin:0 0 18px}
 .cats{
-  display:flex;gap:2px;overflow-x:auto;padding:0 0 12px;margin:0 0 18px;
-  border-bottom:1px solid var(--line);
+  display:flex;gap:2px;overflow-x:auto;padding:0 0 12px;margin:0;
+  scroll-snap-type:x proximity;
   scrollbar-width:none;-ms-overflow-style:none;
 }
 .cats::-webkit-scrollbar{display:none}
+.cat{scroll-snap-align:center}
+/* a strip that scrolls sideways should say so: fade whichever edge still has
+   something behind it, and only that edge (the classes come from app.js) */
+.cats,.presets{
+  --fade-l:0px;--fade-r:0px;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 var(--fade-l),#000 calc(100% - var(--fade-r)),transparent 100%);
+  mask-image:linear-gradient(90deg,transparent 0,#000 var(--fade-l),#000 calc(100% - var(--fade-r)),transparent 100%);
+}
+.has-l{--fade-l:24px}
+.has-r{--fade-r:24px}
 .cat{
   flex:0 0 auto;cursor:pointer;font:inherit;font-size:14px;font-weight:450;min-height:38px;
   display:flex;align-items:center;gap:7px;
@@ -221,11 +232,12 @@ body{
   font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);
 }
 .swap{
-  cursor:pointer;font-size:16px;line-height:1;width:44px;height:44px;border-radius:50%;
+  position:relative;cursor:pointer;font-size:16px;line-height:1;width:44px;height:44px;border-radius:50%;
   background:var(--card);color:var(--muted);border:1px solid var(--line);box-shadow:var(--sh-1);
   transition:transform .3s cubic-bezier(.3,.9,.3,1), color .15s ease;
 }
-.swap:hover{transform:rotate(180deg);color:var(--ink)}
+.swap::after{content:'';position:absolute;inset:-4px;border-radius:50%}
+.swap:hover,.swap:active{transform:rotate(180deg);color:var(--ink)}
 
 /* ---------- chips ---------- */
 .chips{display:flex;flex-wrap:wrap;gap:7px}
@@ -371,14 +383,26 @@ body{
   .keys>div{grid-template-columns:84px 1fr}
 }
 @media (max-width:560px){
-  /* keep value, unit and currency on one line instead of three */
-  .num{flex:1 1 84px;font-size:20px;padding:8px 10px}
-  .sel{flex:1 1 92px;font-size:13.5px;padding:9px 8px}
-  .sel.cur{width:72px;flex:0 0 auto}
+  /* keep value, unit and currency on one line instead of three, and give the
+     unit the width — "square kilometres" needs it, a two-digit number does not */
   .row{gap:6px}
-  .head{align-items:center}
-  .tagline{order:3;width:100%;margin:11px 0 0;text-align:left}
+  .num{flex:1 1 82px;font-size:19px;padding:6px 10px}
+  .sel{flex:2 1 96px;font-size:13.5px;padding:8px 8px}
+  .sel.cur{width:72px;flex:0 0 auto}
+  .head{align-items:center;gap:12px}
+  .tagline{order:3;width:100%;margin:8px 0 0;font-size:10.5px;text-align:left}
   .headtools{order:2;margin-left:auto}
+  .cat{padding:8px 10px;font-size:13.5px}
+  /* the suggestions become one swipeable line instead of a ragged block */
+  .tryrow{flex-wrap:nowrap;align-items:center;gap:10px;margin-bottom:18px}
+  .trylabel{padding:0}
+  .presets{
+    flex:1 1 auto;flex-wrap:nowrap;min-width:0;overflow-x:auto;
+    margin-right:-14px;padding-right:14px;
+    scroll-snap-type:x proximity;scrollbar-width:none;-ms-overflow-style:none;
+  }
+  .presets::-webkit-scrollbar{display:none}
+  .presets .chip{flex:0 0 auto;scroll-snap-align:start}
 }
 /* fingers need more room than a cursor does */
 @media (pointer:coarse){
@@ -388,17 +412,27 @@ body{
   .ref{padding:12px 6px}
   .btn{padding:12px 18px}
   .swap{width:46px;height:46px}
+  .swap::after{inset:-6px}
 }
 @media (hover:none) and (pointer:coarse){
   #help,.kbdhint{display:none}
 }
 @media (max-width:760px){
   .wrap{padding:18px 14px 56px}
-  .picker{grid-template-columns:1fr;gap:18px;padding:16px}
+  .head{padding-bottom:12px;margin-bottom:16px}
+  /* the strip runs to both screen edges, so a half-shown category reads as
+     "there is more over there" rather than as a clipped button */
+  .catsrow{margin:0 -14px 14px}
+  .cats{padding:0 14px 10px;scroll-padding:0 14px}
+  .picker{grid-template-columns:1fr;gap:10px;padding:14px;margin-bottom:14px}
   .side{padding:0}
-  .vs{flex-direction:row;gap:12px;justify-content:center;padding:0}
+  .tag{margin-bottom:7px}
+  /* the swap sits on a hairline that also separates the two sides, which is
+     the job the tall empty column was doing on a wide screen */
+  .vs{flex-direction:row;align-items:center;gap:10px;padding:0;margin:1px 0}
+  .vs::before,.vs::after{content:'';height:1px;flex:1 1 auto;background:var(--line-2)}
+  .swap{width:40px;height:40px;font-size:15px}
   .num{font-size:21px;max-width:none}
-  .head{padding-bottom:14px}
   .refs{padding:16px 14px 8px}
   .reflist{grid-template-columns:1fr;gap:0}
   .factcard{padding:4px 10px 8px}
@@ -406,7 +440,7 @@ body{
 
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important}
-  .swap:hover{transform:none}
+  .swap:hover,.swap:active{transform:none}
 
 }
 
@@ -479,7 +513,9 @@ kbd{
   </header>
 
 <main>
-  <nav class="cats" id="cats" aria-label="what to compare"></nav>
+  <div class="catsrow">
+    <nav class="cats" id="cats" aria-label="what to compare"></nav>
+  </div>
 
   <section class="picker card" aria-label="the two quantities">
     <div class="side">
@@ -2627,9 +2663,40 @@ function bestUnit(cat, base) {
 }
 
 /* ---------------- chrome ---------------- */
+/* A strip that scrolls sideways has to say so. Fade whichever edge still has
+   something behind it — never both when there is nothing to scroll to. */
+let fitCats = null, fitPresets = null;
+function markEdges(el) {
+  const upd = () => {
+    const max = el.scrollWidth - el.clientWidth;
+    el.classList.toggle('has-l', max > 2 && el.scrollLeft > 2);
+    el.classList.toggle('has-r', max > 2 && el.scrollLeft < max - 2);
+  };
+  el.addEventListener('scroll', upd, { passive: true });
+  window.addEventListener('resize', upd);
+  upd();
+  return upd;
+}
+/* on a phone the category strip is three times wider than the screen, so the
+   chosen one has to be brought into view or it is simply lost */
+function catInView() {
+  const b = document.querySelector('.cat[aria-pressed="true"]'), c = $('cats');
+  if (!b || !c) return true;
+  const r = b.getBoundingClientRect(), s = c.getBoundingClientRect();
+  return r.left >= s.left - 1 && r.right <= s.right + 1;
+}
+function showCat(smooth) {
+  const b = document.querySelector('.cat[aria-pressed="true"]');
+  if (!b || !b.scrollIntoView) return;
+  let slide = smooth;
+  try { slide = smooth && !window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+  catch (e) { /* no matchMedia, no problem */ }
+  b.scrollIntoView({ block: 'nearest', inline: 'center', behavior: slide ? 'smooth' : 'auto' });
+}
 function buildCats() {
   $('cats').innerHTML = CATS.map(c =>
     `<button type="button" class="cat" data-cat="${c.id}" aria-pressed="${c.id === S.cat}">${icon(c.id)}${c.name}</button>`).join('');
+  if (fitCats) fitCats();
 }
 function buildUnits() {
   const cat = catOf();
@@ -2646,6 +2713,9 @@ function buildUnits() {
 function buildPresets() {
   $('presets').innerHTML = catOf().presets.map((p, i) =>
     `<button type="button" class="chip" data-preset="${i}">${U.esc(p.t)}</button>`).join('');
+  const el = $('presets');
+  el.scrollLeft = 0;
+  if (fitPresets) fitPresets();
 }
 /* how a landmark reads on its own terms: 828 m, not 267.1 storeys */
 function refReading(cat, r) {
@@ -2788,6 +2858,7 @@ function setCat(id) {
   S.a = Object.assign({ c: 'USD' }, cat.def.a);
   S.b = Object.assign({ c: 'USD' }, cat.def.b);
   buildUnits(); buildPresets(); buildRefs(); syncInputs(); render();
+  showCat(true);
 }
 function applyPreset(p) {
   S.a = { v: p.a[0], u: p.a[1], c: p.a[2] || 'USD' };
@@ -2948,7 +3019,25 @@ function bindKeys() {
 function init() {
   if (!readHash()) { const c = CATS[0]; S.a = Object.assign({ c: 'USD' }, c.def.a); S.b = Object.assign({ c: 'USD' }, c.def.b); }
   initTheme();
+  fitCats = markEdges($('cats'));
+  fitPresets = markEdges($('presets'));
   buildCats(); buildUnits(); buildPresets(); buildRefs(); syncInputs(); render();
+  showCat(false);
+  /* Two things move the strip out from under us after this runs: the webfont
+     landing widens every chip, and the browser restores the strip's own scroll
+     offset from the last visit — which points at whatever used to be there,
+     not at the category in the link. So the position is checked again once
+     things have settled, and only corrected if the choice is off the screen. */
+  const settle = () => {
+    if (fitCats) fitCats();
+    if (fitPresets) fitPresets();
+    if (!catInView()) showCat(false);
+  };
+  try { document.fonts.ready.then(settle); } catch (e) { /* no font loading API */ }
+  window.addEventListener('load', () => {
+    requestAnimationFrame(settle);
+    setTimeout(settle, 180);
+  });
   bindKeys();
 
   $('themer').addEventListener('click', e => {
@@ -2989,6 +3078,7 @@ function init() {
     const c = CATS[Math.floor(Math.random() * CATS.length)];
     S.cat = c.id; buildUnits(); buildPresets(); buildRefs();
     applyPreset(c.presets[Math.floor(Math.random() * c.presets.length)]);
+    showCat(true);
     document.querySelector('.stagewrap').scrollIntoView({ behavior: 'smooth', block: 'center' });
   });
   $('copy').addEventListener('click', async () => {
@@ -2996,7 +3086,7 @@ function init() {
     catch (e) { $('copy').textContent = location.hash; say('could not reach the clipboard'); }
     setTimeout(() => { $('copy').textContent = 'copy this comparison'; }, 1600);
   });
-  window.addEventListener('hashchange', () => { if (readHash()) { buildCats(); buildUnits(); buildPresets(); buildRefs(); syncInputs(); render(); } });
+  window.addEventListener('hashchange', () => { if (readHash()) { buildCats(); buildUnits(); buildPresets(); buildRefs(); syncInputs(); render(); showCat(true); } });
 }
 document.addEventListener('DOMContentLoaded', init);
 

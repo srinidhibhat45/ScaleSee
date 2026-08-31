@@ -62,6 +62,14 @@ stays on one line, and the comparison table tightens instead of scrolling, so th
 numbers are still readable side by side. Anything you touch is at least 40px under a
 coarse pointer, and the keyboard hint gets out of the way.
 
+The chrome above the drawing is kept short, because everything spent there is scrolling
+the reader has to do before they see the picture. The categories and the `try` suggestions
+each run as one strip that scrolls sideways to the screen edges, fading whichever end
+still has something behind it; the strip is three times wider than a phone, so the chosen
+category is scrolled back into view whenever it changes — and again once the webfont
+lands and every chip gets wider. Between the two sides, the swap button sits on a hairline
+that separates them, rather than in the tall empty column it needs on a wide screen.
+
 ## Keyboard
 
 | | |
